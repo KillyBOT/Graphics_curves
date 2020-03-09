@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "ml6.h"
 #include "display.h"
@@ -19,6 +20,15 @@
 void add_circle( struct matrix *edges,
                  double cx, double cy, double cz,
                  double r, double step ) {
+  double t = 0;
+  for(int n = 0; n < 1/step; n++){
+    add_point(
+      edges,
+      (r * cos((2 * M_PI) * t)) + cx,
+      (r * sin((2 * M_PI) * t)) + cy,
+      cz);
+    t += step;
+  }
 }
 
 /*======== void add_curve() ==========
@@ -44,6 +54,21 @@ void add_curve( struct matrix *edges,
                 double x2, double y2, 
                 double x3, double y3, 
                 double step, int type ) {
+  struct matrix* xt = generate_curve_coefs(x0,x1,x2,x3,type);
+  struct matrix* yt = generate_curve_coefs(y0,y1,y2,y3,type);
+  double t = 0;
+
+  for(int n = 0; n < 1/step; n++){
+    add_point(
+      edges,
+      (t * t * t * xt->m[0][0]) + (t * t * xt->m[1][0]) + (t * xt->m[2][0]) + xt->m[3][0],
+      (t * t * t * yt->m[0][0]) + (t * t * yt->m[1][0]) + (t * yt->m[2][0]) + yt->m[3][0],
+      0);
+    t += step;
+  }
+
+  free_matrix(xt);
+  free_matrix(yt);
 }
 
 
@@ -105,14 +130,6 @@ void draw_lines( struct matrix * points, screen s, color c) {
 	      points->m[1][point+1],
 	      s, c);	       
 }// end draw_lines
-
-
-
-
-
-
-
-
 
 void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
   

@@ -9,6 +9,8 @@
 #include "matrix.h"
 #include "parser.h"
 
+#define T_STEP .0005
+
 /*======== void parse_file () ==========
 Inputs:   char * filename
           struct matrix * transform,
@@ -82,8 +84,8 @@ void parse_file ( char * filename,
     line[strlen(line)-1]='\0';
     //printf(":%s:\n",line);
 
-    double xvals[3];
-    double yvals[3];
+    double xvals[4];
+    double yvals[4];
     double zvals[4];
     struct matrix *tmp;
     double theta;
@@ -103,16 +105,35 @@ void parse_file ( char * filename,
                xvals[1], yvals[1], zvals[1]);
     }//end line
 
-    else if ( strncmp(line, "scale", strlen(line)) == 0 ) {
+    else if ( strncmp(line, "bezier", strlen(line)) == 0 ) {
       fgets(line, sizeof(line), f);
-      //printf("SCALE\t%s", line);
+      //printf("BEZIER\t%s", line);
       sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf",
              xvals, yvals, xvals+1, yvals+1, xvals+2, yvals+2, xvals+3, yvals+3);
       /* printf("%lf %lf %lf\n", */
       /* xvals[0], yvals[0], zvals[0]); */
-      tmp = make_scale( xvals[0], yvals[0], zvals[0]);
-      matrix_mult(tmp, transform);
-    }//end scale
+      add_curve(edges, xvals[0], yvals[0], xvals[1], yvals[1], xvals[2], yvals[2], xvals[3], yvals[3], T_STEP, BEZIER);
+    }//end bezier
+
+    else if ( strncmp(line, "hermite", strlen(line)) == 0 ) {
+      fgets(line, sizeof(line), f);
+      //printf("HERMITE\t%s", line);
+      sscanf(line, "%lf %lf %lf %lf %lf %lf %lf %lf",
+             xvals, yvals, xvals+1, yvals+1, xvals+2, yvals+2, xvals+3, yvals+3);
+      /* printf("%lf %lf %lf\n", */
+      /* xvals[0], yvals[0], zvals[0]); */
+      add_curve(edges, xvals[0], yvals[0], xvals[1], yvals[1], xvals[2], yvals[2], xvals[3], yvals[3], T_STEP, HERMITE);
+    }//end hermite
+
+    else if ( strncmp(line, "circle", strlen(line)) == 0 ) {
+      fgets(line, sizeof(line), f);
+      //printf("CIRCLE\t%s", line);
+      sscanf(line, "%lf %lf %lf %lf",
+             xvals, xvals+1, xvals+2, xvals+3);
+      /* printf("%lf %lf %lf\n", */
+      /* xvals[0], yvals[0], zvals[0]); */
+      add_circle(edges, xvals[0], xvals[1], xvals[2], xvals[3], T_STEP);
+    }//end circle
 
     else if ( strncmp(line, "scale", strlen(line)) == 0 ) {
       fgets(line, sizeof(line), f);
@@ -123,6 +144,7 @@ void parse_file ( char * filename,
       /* xvals[0], yvals[0], zvals[0]); */
       tmp = make_scale( xvals[0], yvals[0], zvals[0]);
       matrix_mult(tmp, transform);
+      free_matrix(tmp);
     }//end scale
 
     else if ( strncmp(line, "move", strlen(line)) == 0 ) {
@@ -134,6 +156,7 @@ void parse_file ( char * filename,
       /* xvals[0], yvals[0], zvals[0]); */
       tmp = make_translate( xvals[0], yvals[0], zvals[0]);
       matrix_mult(tmp, transform);
+      free_matrix(tmp);
     }//end translate
 
     else if ( strncmp(line, "rotate", strlen(line)) == 0 ) {
@@ -152,6 +175,7 @@ void parse_file ( char * filename,
         tmp = make_rotZ( theta );
 
       matrix_mult(tmp, transform);
+      free_matrix(tmp);
     }//end rotate
 
     else if ( strncmp(line, "ident", strlen(line)) == 0 ) {
@@ -180,5 +204,6 @@ void parse_file ( char * filename,
       draw_lines(edges, s, c);
       save_extension(s, line);
     }//end save
+
   }
 }
