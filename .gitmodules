@@ -1,0 +1,3 @@
+[submodule "cordic"]
+	path = cordic
+	url = https://github.com/KillyBOT/CORDIC_Demo

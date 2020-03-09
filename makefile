@@ -1,4 +1,4 @@
-OBJECTS= main.o draw.o display.o matrix.o parser.o
+OBJECTS= main.o draw.o display.o matrix.o parser.o cordic.o
 CFLAGS= -Wall
 LDFLAGS= -lm
 CC= gcc
@@ -12,10 +12,10 @@ all: $(OBJECTS)
 main.o: main.c display.h draw.h ml6.h matrix.h parser.h
 	$(CC) -c main.c
 
-draw.o: draw.c draw.h display.h ml6.h matrix.h
+draw.o: draw.c draw.h display.h ml6.h matrix.h cordic.h
 	$(CC) $(CFLAGS) -c draw.c
 
-dsiplay.o: display.c display.h ml6.h matrix.h
+display.o: display.c display.h ml6.h matrix.h
 	$(CC) $(CFLAGS) -c display.c
 
 matrix.o: matrix.c matrix.h

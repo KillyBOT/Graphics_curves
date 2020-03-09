@@ -12,6 +12,7 @@
 #include <math.h>
 
 #include "matrix.h"
+#include "cordic.h"
 
 
 /*======== struct matrix * make_bezier() ==========
