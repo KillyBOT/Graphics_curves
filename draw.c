@@ -22,14 +22,21 @@ void add_circle( struct matrix *edges,
                  double r, double step ) {
   double t = 0;
   for(int n = 0; n < 1/step; n++){
-    //printf("%f %f\n",(r * cosine((2 * M_PI) * t)) + cx, (r * sine((2 * M_PI) * t)) + cy);
-    printf("%f\n", t);
+    //printf("%f %f\n",r * cosine(360 * t) + cx, r * sine(360 * t) + cy);
+    //printf("%f\n", t);
     add_point(
       edges,
-      (r * cosine((2 * M_PI) * t) * (180 / M_PI)) + cx,
-      (r * sine((2 * M_PI) * t) * (180 / M_PI)) + cy,
+      r * cosine(360 * t) + cx,
+      r * sine(360 * t) + cy,
       cz);
+    // add_point(
+    //   edges,
+    //   r * cos(2 * M_PI * t) + cx,
+    //   r * sin(2 * M_PI * t) + cy,
+    //   cz
+    // );
     t += step;
+
   }
 }
 

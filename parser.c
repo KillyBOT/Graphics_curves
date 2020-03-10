@@ -71,9 +71,9 @@ void parse_file ( char * filename,
   char line[255];
   clear_screen(s);
   color c;
-  c.red = 255;
+  c.red = 0;
   c.green = 0;
-  c.blue = 255;
+  c.blue = 0;
 
   if ( strcmp(filename, "stdin") == 0 )
     f = stdin;
@@ -133,11 +133,12 @@ void parse_file ( char * filename,
       /* printf("%lf %lf %lf\n", */
       /* xvals[0], yvals[0], zvals[0]); */
       add_circle(edges, xvals[0], xvals[1], xvals[2], xvals[3], T_STEP);
+
     }//end circle
 
     else if ( strncmp(line, "scale", strlen(line)) == 0 ) {
       fgets(line, sizeof(line), f);
-      //printf("SCALE\t%s", line);
+      // printf("SCALE\t%s", line);
       sscanf(line, "%lf %lf %lf",
              xvals, yvals, zvals);
       /* printf("%lf %lf %lf\n", */
@@ -191,7 +192,9 @@ void parse_file ( char * filename,
     else if ( strncmp(line, "display", strlen(line)) == 0 ) {
       //printf("DISPLAY\t%s", line);
       clear_screen(s);
+      //printf("Test 1\n");
       draw_lines(edges, s, c);
+      //printf("Test 2\n");
       display( s );
     }//end display
 
@@ -204,6 +207,7 @@ void parse_file ( char * filename,
       draw_lines(edges, s, c);
       save_extension(s, line);
     }//end save
+    //printf("NEXT\n");
 
   }
 }

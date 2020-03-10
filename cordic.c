@@ -44,7 +44,6 @@ double c_mag(struct cnum c){
 double c_phase(struct cnum c){
   struct cnum r = {0,1}; //Rotation
   double phase = 0;
-  double temp;
   double atan_table[MAX_ITER] = {
     45.0000000000000000,
     26.5650511770779900,
@@ -161,6 +160,7 @@ double cord_mag(int iter){
 
 double sine(double theta){
 
+  //printf("TEST %f\n",theta);
   if(theta > 360){
     return sine(theta - 360);
   } else if(theta < -360){
@@ -363,11 +363,9 @@ double cosine(double theta){
       c = c_mult(c,r);
       phase += atan_table[x];
     }
-    else if(theta < phase){
+    else {
       c = c_mult(c,c_conj(r));
       phase -= atan_table[x];
-    } else {
-      return c.r * (cord_mag(x));
     }
 
     r.i /= 2;
